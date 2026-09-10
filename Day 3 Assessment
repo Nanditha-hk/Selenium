@@ -1,0 +1,175 @@
+//Test Case 1 
+
+1.Navigate EaseMyTrip and handle the notification popup.
+2.Select One Way.
+3.Enter any state  in the From field and select a valid suggestion.
+4.Enter another state  in the To field and select a valid suggestion.
+5.Click the Departure Date field.
+6.Select any available future date from the calendar.
+7.Click Traveller & Class.
+8.Select 2 Adults and keep the class as Economy.
+9.Click Search.
+10.Verify that the flight-results page is displayed.
+
+//Code
+package Assessment;
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+public class EasyMyTrip {
+
+	public static void main(String[] args) throws InterruptedException {
+		
+		//create object for chromeoptions
+		ChromeOptions opt = new ChromeOptions();
+		
+		//handle notification
+		opt.addArguments("--disable-notifications");
+
+		//launch the browser 
+		WebDriver driver = new ChromeDriver(opt);
+		
+		//maximize the window
+		driver.manage().window().maximize();
+		
+		//implicitly wait time
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		
+		//naviagate to application
+		driver.get("https://www.easemytrip.com/");
+		Thread.sleep(1000);
+		
+		//locate One Way and select it
+		driver.findElement(By.id("oway")).click();
+		Thread.sleep(1000);
+		
+		//locate from field and click
+		driver.findElement(By.id("FromSector_show")).click();
+		Thread.sleep(1000);
+		
+		//locate text field and enter the data
+		driver.findElement(By.id("a_FromSector_show")).sendKeys("Banglore");
+		Thread.sleep(1000);
+		
+		//select valid suggestion
+		driver.findElement(By.id("spnBengaluru")).click();
+		Thread.sleep(1000);
+		
+		//locate to text field and enter data
+		driver.findElement(By.id("a_Editbox13_show")).sendKeys("Abu Dhabi");
+		Thread.sleep(1000);
+		
+		//select valid suggestion
+		driver.findElement(By.id("airportAbu Dhabi")).click();
+		Thread.sleep(1000);
+		
+		//select departure date
+		driver.findElement(By.id("img2Nex")).click();
+		Thread.sleep(1000);
+				
+		driver.findElement(By.id("img2Nex")).click();
+		Thread.sleep(1000);
+
+		driver.findElement(By.id("snd_4_10/12/2026")).click();
+		Thread.sleep(1000);
+
+		
+		//locate traveller and class and click
+		driver.findElement(By.id("ptravlr")).click();
+		Thread.sleep(1000);
+		
+		//select 3 adults
+		driver.findElement(By.xpath("//button[@id='add']")).click();
+		Thread.sleep(1000);
+		
+		//select the class as economy
+		driver.findElement(By.id("spanBusiness")).click();
+		Thread.sleep(1000);
+		
+		//locate done button and click
+		driver.findElement(By.xpath("//a[@id='traveLer']")).click();
+		Thread.sleep(1000);
+		
+		//locate search button and click
+		driver.findElement(By.xpath("//input[@value='Search']")).click();
+		Thread.sleep(1000);
+		
+		//verification
+		String title = driver.getTitle();
+		
+		if(title.contains("Flight Results"))
+			System.out.println("Flight results page is displayed");
+		else
+			System.out.println("Flight results page is not displayed");
+		
+		//close the browser
+		Thread.sleep(2000);
+		driver.quit();
+
+	}
+}
+
+//Testcase 2
+
+1.Navigate to demo appa qspiders date picker.
+2.Click on calender.
+3. Navigate to the next month in the current year.
+4. Select any valid date from that month.
+5. Verify that the selected date is displayed correctly in the date field.
+
+//Code
+package Assessment;
+
+import java.time.Duration;
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Demo {
+
+	public static void main(String[] args) throws InterruptedException {
+
+		//launch the browser
+		WebDriver driver = new ChromeDriver();
+		
+		//maximize the browser
+		driver.manage().window().maximize();
+		
+		//implicit wait time
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		
+		//navigate to the application
+		driver.get("https://demoapps.qspiders.com/ui/datePick?sublist=0");
+		Thread.sleep(2000);
+		
+		//locate calender and click on it
+		driver.findElement(By.xpath("//input[@placeholder='Select A Date']")).click();
+		Thread.sleep(1000);
+		
+		//Navigate to the next month in the current year.
+		driver.findElement(By.xpath("(//button[@type='button'])[2]")).click();
+		Thread.sleep(1000);
+		
+		//Select any valid date from that month.
+		driver.findElement(By.xpath("//div[@aria-label='Choose Saturday, October 10th, 2026']")).click();
+		Thread.sleep(1000);
+		
+		//Verify that the selected date is displayed correctly in the date field.
+		WebElement text = driver.findElement(By.xpath("//input[@value='10/10/2026']"));
+		
+		if(text.getDomAttribute("value").contains("10/10/2026"))
+			System.out.println("Selected  date is displayed");
+		else
+			System.out.println("selected date is not displayed");
+		
+		//close the browser
+		Thread.sleep(2000);
+		driver.quit();
+	}
+
+}
