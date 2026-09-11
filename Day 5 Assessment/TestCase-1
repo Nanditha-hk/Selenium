@@ -1,0 +1,52 @@
+package DataDependency;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Properties;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class ToReadTheDataFromPropertyFile {
+
+    public static void main(String[] args) throws InterruptedException, IOException {
+
+        FileInputStream fis = new FileInputStream("./src/test/resources/DDT/commondata.properties");
+        Properties prop = new Properties();
+        prop.load(fis);
+
+        String browser = prop.getProperty("browser");
+        String url = prop.getProperty("url");
+        String email = prop.getProperty("email");
+        String password = prop.getProperty("password");
+
+        WebDriver driver = null;
+        if (browser.equals("chrome")) 
+        {
+            driver = new ChromeDriver();
+        } 
+        else if (browser.equals("edge")) 
+        {
+            driver = new EdgeDriver();
+        } 
+        else if (browser.equals("firefox")) 
+        {
+            driver = new FirefoxDriver();
+        }
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.get(url);
+        driver.findElement(By.xpath("//a[text()='Log in']")).click();
+        driver.findElement(By.id("Email")).sendKeys(email);
+        driver.findElement(By.id("Password")).sendKeys(password);
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//input[@class='button-1 login-button']")).click();
+
+        Thread.sleep(2000);
+        driver.quit();
+    }
+}
