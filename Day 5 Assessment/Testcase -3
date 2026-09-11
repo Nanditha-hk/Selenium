@@ -1,0 +1,60 @@
+package DataDependency;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.Duration;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class ReadDataFromJson {
+
+    public static void main(String[] args) throws IOException, Exception {
+
+    	// Open the JSON file
+    	FileReader fir = new FileReader("./src/test/resources/DDT/read.json");
+    	// Create JSON parser
+    	JSONParser parser = new JSONParser();
+    	// Read the JSON file
+    	Object obj = parser.parse(fir);
+    	// Convert the data into JSON object
+    	JSONObject json = (JSONObject) obj;
+
+        String browser = json.get("browser").toString();
+        String url = json.get("url").toString();
+        String name = json.get("name").toString();
+        String email = json.get("email").toString();
+        String password = json.get("password").toString();
+
+        WebDriver driver = null;
+        if (browser.equals("chrome")) 
+        {
+            driver = new ChromeDriver();
+        } 
+        else if (browser.equals("edge")) 
+        {
+            driver = new EdgeDriver();
+        } 
+        else if (browser.equals("firefox")) 
+        {
+            driver = new FirefoxDriver();
+        }
+
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.get(url);
+        driver.findElement(By.id("name")).sendKeys(name, Keys.TAB, email, Keys.TAB, password);
+        Thread.sleep(2000);
+
+        driver.findElement(By.xpath("//button[text()='Register']")).click();
+ 
+        Thread.sleep(2000);
+        driver.quit();
+    }
+}
