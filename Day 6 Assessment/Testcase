@@ -1,0 +1,167 @@
+// Code
+package Assessment;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+public class OrangeHRM {
+
+	public static void main(String[] args) throws IOException, InterruptedException {
+
+		// Read common data from properties file
+		FileInputStream fis = new FileInputStream("./src/test/resources/DDT/OrangeHRM.properties");
+		Properties p = new Properties();
+		p.load(fis);
+
+		// Read test data from Excel
+		FileInputStream excel = new FileInputStream("./src/test/resources/DDT/OrangeHRM.xlsx");
+		Workbook wb = WorkbookFactory.create(excel);
+		DataFormatter df = new DataFormatter();
+
+		String firstName = df.formatCellValue(wb.getSheet("Sheet1").getRow(0).getCell(2));
+		String middleName = df.formatCellValue(wb.getSheet("Sheet1").getRow(1).getCell(2));
+		String lastName = df.formatCellValue(wb.getSheet("Sheet1").getRow(2).getCell(2));
+		String employeeId = df.formatCellValue(wb.getSheet("Sheet1").getRow(3).getCell(2));
+		String newUsername = df.formatCellValue(wb.getSheet("Sheet1").getRow(4).getCell(2));
+		String newPassword = df.formatCellValue(wb.getSheet("Sheet1").getRow(5).getCell(2));
+		String confirmPassword = df.formatCellValue(wb.getSheet("Sheet1").getRow(6).getCell(2));
+		String employeeName = df.formatCellValue(wb.getSheet("Sheet1").getRow(7).getCell(2));
+		String role = df.formatCellValue(wb.getSheet("Sheet1").getRow(8).getCell(2));
+		String status = df.formatCellValue(wb.getSheet("Sheet1").getRow(9).getCell(2));
+
+		String browser = p.getProperty("browser");
+		String url = p.getProperty("url");
+		String username = p.getProperty("username");
+		String password = p.getProperty("password");
+
+		WebDriver driver = null;
+
+		// Launch browser
+		if (browser.equalsIgnoreCase("chrome")) {
+			ChromeOptions option = new ChromeOptions();
+			Map<String, Object> prefs = new HashMap<>();
+			prefs.put("profile.password_manager_leak_detection", false);
+			option.setExperimentalOption("prefs", prefs);
+			driver = new ChromeDriver(option);
+		}
+
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+		driver.get(url);
+		Thread.sleep(3000);
+
+		// Login
+		driver.findElement(By.name("username")).sendKeys(username);
+		driver.findElement(By.name("password")).sendKeys(password);
+		driver.findElement(By.cssSelector("[type='submit']")).click();
+		Thread.sleep(4000);
+
+		// Go to PIM
+		driver.findElement(By.xpath("//span[normalize-space()='PIM']")).click();
+		Thread.sleep(3000);
+
+		driver.findElement(By.xpath("//button[normalize-space()='Add']")).click();
+		Thread.sleep(2000);
+
+		// Enter employee details
+		driver.findElement(By.name("firstName")).sendKeys(firstName);
+
+		if (!middleName.trim().isEmpty()) {
+			driver.findElement(By.name("middleName")).sendKeys(middleName);
+		}
+
+		driver.findElement(By.name("lastName")).sendKeys(lastName);
+
+		WebElement empId = driver.findElement(By.xpath("//label[normalize-space()='Employee Id']/following::input[1]"));
+		empId.click();
+		empId.sendKeys(Keys.CONTROL, "a");
+		empId.sendKeys(Keys.BACK_SPACE);
+		empId.sendKeys(employeeId);
+
+		// Create login details
+		driver.findElement(By.cssSelector("span.oxd-switch-input")).click();
+		Thread.sleep(1000);
+
+		driver.findElement(By.xpath("//label[normalize-space()='Username']/../following-sibling::div//input")).sendKeys(newUsername);
+
+		WebElement passwordField = driver.findElement(By.xpath("//label[normalize-space()='Password']/../following-sibling::div//input"));
+		WebElement confirmPasswordField = driver.findElement(By.xpath("//label[normalize-space()='Confirm Password']/../following-sibling::div//input"));
+
+		passwordField.sendKeys(newPassword);
+		confirmPasswordField.sendKeys(confirmPassword);
+
+		driver.findElement(By.xpath("//button[normalize-space()='Save']")).click();
+		Thread.sleep(6000);
+		// Go to Admin
+		driver.findElement(By.xpath("//span[normalize-space()='Admin']")).click();
+		Thread.sleep(4000);
+		// Enter username
+		WebElement adminUsername = driver.findElement(By.xpath("//label[normalize-space()='Username']/following::input[1]"));
+		adminUsername.sendKeys(newUsername);
+		// Select role
+		driver.findElement(By.xpath("//label[normalize-space()='User Role']/ancestor::div[contains(@class,'oxd-input-group')]//div[contains(@class,'oxd-select-text')]")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//div[@role='option']//span[normalize-space()='" + role + "']")).click();
+		Thread.sleep(1000);
+
+		// Enter employee name
+		WebElement empName = driver.findElement(By.xpath("//label[normalize-space()='Employee Name']/ancestor::div[contains(@class,'oxd-input-group')]//input"));
+		empName.click();
+		empName.sendKeys(employeeName);
+		Thread.sleep(3000);
+
+		// Select employee suggestion
+		List<WebElement> employeeOptions = driver.findElements(By.xpath("//div[@role='option']"));
+
+		if (employeeOptions.size() > 0) {
+			employeeOptions.get(0).click();
+		}
+
+		Thread.sleep(1000);
+
+		// Select status
+		driver.findElement(By.xpath("//label[normalize-space()='Status']/ancestor::div[contains(@class,'oxd-input-group')]//div[contains(@class,'oxd-select-text')]")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//div[@role='option']//span[normalize-space()='" + status + "']")).click();
+		Thread.sleep(1000);
+		// Search employee
+		driver.findElement(By.xpath("//button[normalize-space()='Search']")).click();
+		Thread.sleep(4000);
+		// Verify employee record
+		List<WebElement> records = driver.findElements(By.xpath("//div[contains(@class,'oxd-table-body')]//div[contains(text(),'" + newUsername + "')]"));
+
+		if (records.size() > 0) 
+		{
+			System.out.println("Employee record is displayed successfully");
+		} else {
+			System.out.println("Employee record is not displayed");
+		}
+
+		// Logout
+		driver.findElement(By.className("oxd-userdropdown-name")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//a[normalize-space()='Logout']")).click();
+		Thread.sleep(2000);
+
+		driver.quit();
+		wb.close();
+		excel.close();
+		fis.close();
+	}
+}
