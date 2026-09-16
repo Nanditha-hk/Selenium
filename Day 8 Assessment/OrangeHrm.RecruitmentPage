@@ -1,0 +1,98 @@
+package Assessment;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHrmRecruitmentPage {
+
+    WebDriver driver;
+
+    public OrangeHrmRecruitmentPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(name="firstName")
+    private WebElement firstname;
+
+    @FindBy(name="middleName")
+    private WebElement middlename;
+
+    @FindBy(name="lastName")
+    private WebElement lastname;
+
+    @FindBy(xpath="//label[text()='Vacancy']/following::div[contains(@class,'oxd-select-text')][1]")
+    private WebElement vacancy;
+
+    @FindBy(xpath="//label[text()='Email']/following::input[1]")
+    private WebElement email;
+
+    @FindBy(xpath="//label[text()='Contact Number']/following::input[1]")
+    private WebElement number;
+
+    @FindBy(xpath="//input[@type='file']")
+    private WebElement resume;
+
+    @FindBy(xpath="//label[text()='Date of Application']/following::input[1]")
+    private WebElement dateOfApplication;
+
+    @FindBy(xpath="//button[normalize-space()='Save']")
+    private WebElement savebtn;
+
+    public void getFirstname(String fname) throws InterruptedException {
+        firstname.sendKeys(fname);
+        Thread.sleep(1000);
+    }
+
+    public void getMiddlename(String mname) throws InterruptedException {
+        middlename.sendKeys(mname);
+        Thread.sleep(1000);
+    }
+
+    public void getLastname(String lname) throws InterruptedException {
+        lastname.sendKeys(lname);
+        Thread.sleep(1000);
+    }
+
+    public void getVacancy(String value) throws InterruptedException {
+        vacancy.click();
+        Thread.sleep(1000);
+        driver.findElement(
+            By.xpath("//div[@role='option']//span[normalize-space()='" + value + "']")
+        ).click();
+        Thread.sleep(1000);
+    }
+
+    public void getemail(String value) throws InterruptedException {
+        email.sendKeys(value);
+        Thread.sleep(1000);
+    }
+
+    public void getNumber(String value) throws InterruptedException {
+        number.sendKeys(value);
+        Thread.sleep(1000);
+    }
+
+    public void getresume(String value) throws InterruptedException {
+        resume.sendKeys(value);
+        Thread.sleep(1000);
+    }
+
+    public void getDateOfApplication(String value) throws InterruptedException {
+        dateOfApplication.click();
+        Thread.sleep(1000);
+        driver.findElement(
+            By.xpath("//div[contains(@class,'oxd-calendar-date') and normalize-space()='16']")
+        ).click();
+        Thread.sleep(1000);
+    }
+
+    public void getSavebtn() throws InterruptedException {
+        Thread.sleep(1000);
+        savebtn.click();
+        Thread.sleep(2000);
+    }
+}
