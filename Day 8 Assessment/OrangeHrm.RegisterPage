@@ -1,0 +1,58 @@
+package Assessment;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHrmRegisterPage {
+
+    WebDriver driver;
+
+    public OrangeHrmRegisterPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(id="FirstName")
+    private WebElement firstname;
+
+    @FindBy(id="LastName")
+    private WebElement lastname;
+
+    @FindBy(id="Email")
+    private WebElement email;
+
+    @FindBy(id="Password")
+    private WebElement pwd;
+
+    @FindBy(id="ConfirmPassword")
+    private WebElement confirmpwd;
+
+    @FindBy(id="register-button")
+    private WebElement Register;
+
+    public void getFirstname(String fname) {
+        firstname.sendKeys(fname);
+    }
+
+    public void getLastname(String lname) {
+        lastname.sendKeys(lname);
+    }
+
+    public void getEmail(String value) {
+        email.sendKeys(value);
+    }
+
+    public void getPwd(String value1) {
+        pwd.sendKeys(value1);
+    }
+
+    public void getConfirmpwd(String cpwd) {
+        confirmpwd.sendKeys(cpwd);
+    }
+
+    public void getRegister() {
+        Register.click();
+    }
+}
