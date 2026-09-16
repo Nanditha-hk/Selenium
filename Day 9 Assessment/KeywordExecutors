@@ -1,0 +1,34 @@
+package KeywordDriven;
+
+public class KeywordExecutors {
+
+    KeywordImplementation k = new KeywordImplementation();
+
+    public void executeKeyword(String keyword) {
+
+        if (keyword.equals("LAUNCH BROWSER")) 
+        {
+            k.launchBrowser();    
+        }
+
+        else if (keyword.equals("OPEN URL")) 
+        {
+            k.openUrl();
+        }
+
+        else if (keyword.equals("SEARCH")) 
+        {
+            k.search();
+        }
+
+        else if (keyword.equals("SEARCH BUTTON")) 
+        {
+            k.searchbutton();
+        }
+
+        else if (keyword.equals("CLOSE BROWSER")) 
+        {
+            k.closeBrowser();
+        }
+    }
+}
