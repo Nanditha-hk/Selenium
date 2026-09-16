@@ -1,0 +1,109 @@
+package Assessment;
+
+import java.time.Duration;
+import java.util.List;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class OrangeHrmCandidatePage {
+
+    WebDriver driver;
+    WebDriverWait wait;
+
+    public OrangeHrmCandidatePage(WebDriver driver) {
+        this.driver = driver;
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(xpath="//label[text()='Job Title']/following::div[contains(@class,'oxd-select-text')][1]")
+    private WebElement JobTitle;
+
+    @FindBy(xpath="//label[text()='Vacancy']/following::div[contains(@class,'oxd-select-text')][1]")
+    private WebElement Vacancy;
+
+    @FindBy(xpath="//label[text()='Hiring Manager']/following::div[contains(@class,'oxd-select-text')][1]")
+    private WebElement HiringManager;
+
+    @FindBy(xpath="//label[text()='Status']/following::div[contains(@class,'oxd-select-text')][1]")
+    private WebElement Status;
+
+    @FindBy(xpath="//label[text()='Candidate Name']/following::input[1]")
+    private WebElement CandidateName;
+
+    @FindBy(xpath="//label[contains(text(),'Date of Application')]/following::input[1]")
+    private WebElement ApplicationDate;
+
+    @FindBy(xpath="//button[normalize-space()='Search']")
+    private WebElement Search;
+
+    public void getJobTitle(String jobTitle) throws InterruptedException {
+        JobTitle.click();
+        Thread.sleep(1000);
+        List<WebElement> options = driver.findElements(By.xpath("//div[@role='option']"));
+        for(WebElement option : options) {
+            if(option.getText().trim().equalsIgnoreCase(jobTitle.trim())) {
+                option.click();
+                break;
+            }
+        }
+    }
+
+    public void getVacancy(String vacancy) throws InterruptedException {
+        Vacancy.click();
+        Thread.sleep(1000);
+        List<WebElement> options = driver.findElements(By.xpath("//div[@role='option']"));
+        for(WebElement option : options) {
+            if(option.getText().trim().equalsIgnoreCase(vacancy.trim())) {
+                option.click();
+                break;
+            }
+        }
+    }
+
+    public void getHiringManager(String hiringManager) throws InterruptedException {
+        HiringManager.click();
+        Thread.sleep(1000);
+        List<WebElement> options = driver.findElements(By.xpath("//div[@role='option']"));
+        for(WebElement option : options) {
+            if(option.getText().trim().equalsIgnoreCase(hiringManager.trim())) {
+                option.click();
+                break;
+            }
+        }
+    }
+
+    public void getStatus(String status) throws InterruptedException {
+        Status.click();
+        Thread.sleep(1000);
+        List<WebElement> options = driver.findElements(By.xpath("//div[@role='option']"));
+        for(WebElement option : options) {
+            if(option.getText().trim().equalsIgnoreCase(status.trim())) {
+                option.click();
+                break;
+            }
+        }
+    }
+
+    public void getCandidateName(String candidateName) throws InterruptedException {
+        CandidateName.sendKeys(candidateName);
+        Thread.sleep(1000);    
+        }
+
+    public void getApplicationDate(String applicationDate) throws InterruptedException {
+        ApplicationDate.click();
+        ApplicationDate.clear();
+        ApplicationDate.sendKeys(applicationDate);
+        Thread.sleep(1000);
+        
+    }
+
+    public void getSearch() throws InterruptedException {
+        Search.click();
+        Thread.sleep(2000);
+    }
+}
