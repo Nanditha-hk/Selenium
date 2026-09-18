@@ -1,0 +1,89 @@
+package Assessment;
+
+import java.io.FileInputStream;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import BaseclassImplementation.BaseClass;
+
+public class SauceDemoTest extends BaseClass {
+
+    SauceLoginPage loginPage;
+    SauceHomePage homePage;
+    SauceCheckoutPage checkoutPage;
+
+    // Login test
+    @Test(priority = 1)
+    public void loginTest() throws Exception {
+        loginPage = new SauceLoginPage(driver);
+        loginPage.login(p.getProperty("username"), p.getProperty("password"));
+        Assert.assertEquals(loginPage.getProductsText(), "Products");
+        System.out.println("Products page is displayed");
+    }
+
+    // Order placement test
+    @Test(priority = 2, dependsOnMethods = "loginTest")
+    public void orderPlacementTest() throws Exception {
+        homePage = new SauceHomePage(driver);
+
+        // Add Backpack
+        homePage.addBackpack();
+
+        // Verify cart
+        Assert.assertEquals(homePage.getCartItemCount(), 1);
+        System.out.println("Cart contains 1 item");
+
+        // Open cart
+        homePage.openCart();
+
+        // Verify Backpack
+        Assert.assertEquals(homePage.getBackpackName(), "Sauce Labs Backpack");
+        System.out.println("Sauce Labs Backpack is displayed");
+
+        // Checkout
+        homePage.clickCheckout();
+
+        // Read Excel
+        FileInputStream fis = new FileInputStream("./src/test/resources/DDT/SauceDemo1.xlsx");
+        Workbook workbook = WorkbookFactory.create(fis);
+        Sheet sheet = workbook.getSheetAt(0);
+        DataFormatter df = new DataFormatter();
+
+        String firstName = "";
+        String lastName = "";
+        String postalCode = "";
+
+        // Get Excel data
+        for (Row row : sheet) {
+            if (row.getCell(0) == null || row.getCell(1) == null) continue;
+            String key = df.formatCellValue(row.getCell(0));
+            String value = df.formatCellValue(row.getCell(1));
+            if (key.equalsIgnoreCase("FirstName")) firstName = value;
+            if (key.equalsIgnoreCase("LastName")) lastName = value;
+            if (key.equalsIgnoreCase("PostalCode")) postalCode = value;
+        }
+
+        checkoutPage = new SauceCheckoutPage(driver);
+
+        // Enter details
+        checkoutPage.enterDetails(firstName, lastName, postalCode);
+
+        // Verify Overview
+        Assert.assertEquals(checkoutPage.getOverviewText(), "Checkout: Overview");
+        System.out.println("Checkout: Overview page is displayed");
+
+        // Finish
+        checkoutPage.clickFinish();
+
+        // Verify order
+        Assert.assertEquals(checkoutPage.getThankYouText(), "Thank you for your order!");
+        System.out.println("Thank you for your order!");
+
+        workbook.close();
+        fis.close();
+    }
+}
