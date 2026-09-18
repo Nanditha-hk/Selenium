@@ -1,0 +1,66 @@
+package Assessment;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class SauceCheckoutPage {
+
+    WebDriver driver;
+
+    public SauceCheckoutPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(id = "first-name")
+    WebElement firstName;
+
+    @FindBy(id = "last-name")
+    WebElement lastName;
+
+    @FindBy(id = "postal-code")
+    WebElement postalCode;
+
+    @FindBy(id = "continue")
+    WebElement continueButton;
+
+    @FindBy(xpath = "//span[text()='Checkout: Overview']")
+    WebElement overview;
+
+    @FindBy(id = "finish")
+    WebElement finish;
+
+    @FindBy(className = "complete-header")
+    WebElement thankYou;
+
+    // Enter details
+    public void enterDetails(String first, String last, String postal) throws Exception {
+        firstName.clear();
+        firstName.sendKeys(first);
+        lastName.clear();
+        lastName.sendKeys(last);
+        postalCode.clear();
+        postalCode.sendKeys(postal);
+        continueButton.click();
+        Thread.sleep(2000);
+    }
+
+    // Verify Overview
+    public String getOverviewText() {
+        return overview.getText();
+    }
+
+    // Finish order
+    public void clickFinish() throws Exception {
+        Thread.sleep(1000);
+        finish.click();
+        Thread.sleep(2000);
+    }
+
+    // Verify Thank You
+    public String getThankYouText() {
+        return thankYou.getText();
+    }
+}
