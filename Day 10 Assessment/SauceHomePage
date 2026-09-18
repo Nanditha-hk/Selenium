@@ -1,0 +1,64 @@
+package Assessment;
+
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class SauceHomePage {
+
+    WebDriver driver;
+
+    public SauceHomePage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(id = "add-to-cart-sauce-labs-backpack")
+    WebElement backpack;
+
+    @FindBy(className = "shopping_cart_badge")
+    WebElement cartBadge;
+
+    @FindBy(className = "shopping_cart_link")
+    WebElement cart;
+
+    @FindBy(xpath = "//div[text()='Sauce Labs Backpack']")
+    WebElement backpackName;
+
+    @FindBy(id = "checkout")
+    WebElement checkout;
+
+    // Add Backpack
+    public void addBackpack() throws Exception {
+        Thread.sleep(1000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", backpack);
+        Thread.sleep(1500);
+    }
+
+    // Verify cart
+    public int getCartItemCount() {
+        return Integer.parseInt(cartBadge.getText());
+    }
+
+    // Open cart
+    public void openCart() throws Exception {
+        Thread.sleep(1000);
+        cart.click();
+        Thread.sleep(1500);
+    }
+
+    // Verify Backpack
+    public String getBackpackName() {
+        return backpackName.getText();
+    }
+
+    // Checkout
+    public void clickCheckout() throws Exception {
+        Thread.sleep(1000);
+        checkout.click();
+        Thread.sleep(1500);
+    }
+}
