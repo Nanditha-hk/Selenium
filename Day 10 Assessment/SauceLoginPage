@@ -1,0 +1,50 @@
+package Assessment;
+
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class SauceLoginPage {
+
+    WebDriver driver;
+
+    public SauceLoginPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(id = "user-name")
+    WebElement username;
+
+    @FindBy(id = "password")
+    WebElement password;
+
+    @FindBy(id = "login-button")
+    WebElement loginButton;
+
+    @FindBy(className = "title")
+    WebElement products;
+
+    // Login
+    public void login(String user, String pass) throws Exception {
+        username.sendKeys(user);
+        password.sendKeys(pass);
+        loginButton.click();
+        Thread.sleep(2000);
+
+        // Close Chrome popup
+        Robot robot = new Robot();
+        robot.keyPress(KeyEvent.VK_ESCAPE);
+        robot.keyRelease(KeyEvent.VK_ESCAPE);
+        Thread.sleep(1000);
+    }
+
+    // Verify Products
+    public String getProductsText() {
+        return products.getText();
+    }
+}
