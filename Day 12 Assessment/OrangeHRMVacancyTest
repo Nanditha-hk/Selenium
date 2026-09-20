@@ -1,0 +1,70 @@
+//TestCase  - 1
+
+Login to orangeHrm application ->click on Recruitment link ->click on vacancies link ->enter vacancy name ,
+select job title,add description , select hiring manager, number of positons-> 
+click on save button 
+
+//Code
+package Assessment;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+
+public class OrangeHRMVacancyTest {
+
+    @Test
+    public void createVacancy() throws EncryptedDocumentException, IOException, InterruptedException {
+
+        FileInputStream fis = new FileInputStream("./src/test/resources/DDT/Orangehrm2.xlsx");
+        Workbook wb = WorkbookFactory.create(fis);
+        Row row = wb.getSheet("Sheet1").getRow(1);
+        DataFormatter df = new DataFormatter();
+
+        String vacancyName = df.formatCellValue(row.getCell(0));
+        String jobTitle = df.formatCellValue(row.getCell(1));
+        String description = df.formatCellValue(row.getCell(2));
+        String hiringManager = df.formatCellValue(row.getCell(3));
+        String positions = df.formatCellValue(row.getCell(4));
+
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+
+        driver.get("https://opensource-demo.orangehrmlive.com/");
+        Thread.sleep(5000);
+
+        System.out.println("OrangeHRM application launched");
+
+        driver.findElement(By.name("username")).sendKeys("Admin");
+        driver.findElement(By.name("password")).sendKeys("admin123");
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+
+        Thread.sleep(4000);
+
+        System.out.println("Login successful");
+
+        OrangeHRMVacancyPage vacancy = new OrangeHRMVacancyPage(driver);
+
+        vacancy.createVacancy(vacancyName, jobTitle, description, hiringManager, positions);
+
+        System.out.println("Vacancy Name: " + vacancyName);
+        System.out.println("Job Title: " + jobTitle);
+        System.out.println("Description: " + description);
+        System.out.println("Hiring Manager: " + hiringManager);
+        System.out.println("Number of Positions: " + positions);
+        System.out.println("Vacancy created successfully");
+
+        driver.quit();
+        wb.close();
+        fis.close();
+    }
+}
