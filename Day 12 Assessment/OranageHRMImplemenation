@@ -1,0 +1,74 @@
+package Assessment;
+
+import java.awt.AWTException;
+
+import org.testng.annotations.Test;
+
+import BaseClass.OrangeHrm;
+
+public class OranageHRMImplemenation extends OrangeHrm {
+
+    @Test
+    public void testCase1Test() throws InterruptedException, AWTException {
+
+       homepage.getMyInfo();
+       Thread.sleep(2000);
+       String text = myInfopage.getFirstName();
+       Thread.sleep(2000);
+    	homepage.getRecruitment();
+
+        Thread.sleep(2000);
+
+        recruitmentpage.clickVacancies();
+
+        Thread.sleep(1000);
+        
+        vacanciespage.getAddButton();
+
+        vacanciespage.getVnametf(vname);
+        Thread.sleep(2000);
+        vacanciespage.getJobTitle(jobTitle);
+        Thread.sleep(2000);
+        vacanciespage.getDescriptiontf(description);
+        Thread.sleep(2000);
+        vacanciespage.getHiringManagertf(text);
+        Thread.sleep(2000);
+        vacanciespage.getNoOfPsisitiostf(noOfPositions);
+        Thread.sleep(2000);
+
+        vacanciespage.getSaveButton();
+        Thread.sleep(2000);
+
+        Thread.sleep(1000);
+        System.out.println("Testcase1 executed");
+    }
+
+    @Test(priority = 1)
+    public void testCase2Test() throws InterruptedException, AWTException {
+
+        homepage.getMyInfo();
+
+        myInfopage.getFntf(fn);
+        System.out.println(fn);
+        Thread.sleep(2000);
+        myInfopage.getLntf(ln);
+        Thread.sleep(2000);
+        myInfopage.getEmpidtf(empid);
+        Thread.sleep(2000);
+        myInfopage.clickSaveButton();
+
+        Thread.sleep(2000);
+        System.out.println("Testcase2 executed");
+    }
+
+    @Test(priority = 2)
+    public void verifyTestcase2Test() throws InterruptedException {
+
+        homepage.getMyInfo();
+        Thread.sleep(2000);
+
+        myInfopage.verifyDetailsUpdated(empid);
+        System.out.println("Testcase2 verified");
+        
+    }
+}
