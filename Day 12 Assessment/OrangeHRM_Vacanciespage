@@ -1,0 +1,152 @@
+package BaseClass;
+
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
+
+public class OrangeHRM_Vacanciespage {
+
+    WebDriver driver;
+    Robot r;
+
+    public OrangeHRM_Vacanciespage(WebDriver driver) throws AWTException {
+        this.driver = driver;
+        r = new Robot();
+        PageFactory.initElements(driver, this);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+    }
+
+    @FindBy(xpath = "//button[@class='oxd-button oxd-button--medium oxd-button--secondary']")
+    private WebElement addButton;
+
+    @FindBy(xpath = "//label[text()='Vacancy Name']/../..//input")
+    private WebElement vnametf;
+
+    @FindBy(xpath = "//label[text()='Job Title']/../../..//div")
+    private WebElement jobTitle;
+
+    @FindBy(xpath = "//textarea")
+    private WebElement descriptiontf;
+
+    @FindBy(xpath = "//input[@placeholder='Type for hints...']")
+    private WebElement hiringManagertf;
+
+    @FindBy(xpath = "//label[text()='Number of Positions']/../..//input")
+    private WebElement noOfPsisitiostf;
+
+    @FindBy(xpath = "//button[@type='submit']")
+    private WebElement saveButton;
+
+    @FindBy(xpath = "//label[text()='Vacancy']/../../..//div")
+    private WebElement vacancyDropdown;
+
+    @FindBy(xpath = "//label[text()='Status']/../../..//div")
+    private WebElement statusDropdown;
+
+    public void getAddButton() {
+        addButton.click();
+    }
+
+    public void getVnametf(String value) {
+        vnametf.sendKeys(value);
+    }
+
+    public void getJobTitle(String value) throws AWTException {
+
+        jobTitle.click();
+
+       
+            r.keyPress(KeyEvent.VK_DOWN);
+            r.keyRelease(KeyEvent.VK_DOWN);
+
+            r.keyPress(KeyEvent.VK_ENTER);
+            r.keyRelease(KeyEvent.VK_ENTER);
+
+       
+    }
+
+    public void getDescriptiontf(String value) {
+        descriptiontf.sendKeys(value);
+    }
+
+    public void getHiringManagertf(String value) throws InterruptedException {
+
+        hiringManagertf.sendKeys(value);
+
+        Thread.sleep(3000);
+
+        r.keyPress(KeyEvent.VK_DOWN);
+        r.keyRelease(KeyEvent.VK_DOWN);
+
+        r.keyPress(KeyEvent.VK_ENTER);
+        r.keyRelease(KeyEvent.VK_ENTER);
+    }
+
+    public void getNoOfPsisitiostf(String value) {
+        noOfPsisitiostf.sendKeys(value);
+    }
+
+    public void getSaveButton() {
+        saveButton.click();
+    }
+
+    public void clickSearchButton() {
+        saveButton.click();
+    }
+
+    public void getVacancyDropdown(String value) {
+
+        vacancyDropdown.click();
+
+        String text = "";
+
+        while (!text.equals(value)) {
+
+            r.keyPress(KeyEvent.VK_DOWN);
+            r.keyRelease(KeyEvent.VK_DOWN);
+
+            r.keyPress(KeyEvent.VK_ENTER);
+            r.keyRelease(KeyEvent.VK_ENTER);
+
+            text = driver.findElement(
+                    By.xpath("(//div[@class='oxd-select-text-input'])[2]")
+            ).getText();
+
+            if (text.equals(value)) {
+                break;
+            }
+
+            vacancyDropdown.click();
+        }
+    }
+
+    public void getStatusDropdown() {
+
+        statusDropdown.click();
+
+        r.keyPress(KeyEvent.VK_DOWN);
+        r.keyRelease(KeyEvent.VK_DOWN);
+
+        r.keyPress(KeyEvent.VK_ENTER);
+        r.keyRelease(KeyEvent.VK_ENTER);
+    }
+
+    public void verifyRecordFound(String value) {
+
+        boolean text = driver.findElement(
+                By.xpath("//div[text()='Vacancy']/../../../..//div[text()='" + value + "']")
+        ).isDisplayed();
+
+        Assert.assertTrue(text);
+
+        System.out.println("Record found");
+    }
+}
