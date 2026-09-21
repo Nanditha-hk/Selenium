@@ -1,0 +1,26 @@
+package BaseClass;
+
+import java.time.Duration;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class OrangeHRM_Recruitmentpage {
+
+    WebDriver driver;
+
+    public OrangeHRM_Recruitmentpage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+    }
+
+    @FindBy(xpath = "//a[text()='Vacancies']")
+    private WebElement vacancies;
+
+    public void clickVacancies() {
+        vacancies.click();
+    }
+}
