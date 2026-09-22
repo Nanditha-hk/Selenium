@@ -1,0 +1,18 @@
+package FinalAssessment;
+
+import org.testng.annotations.Test;
+
+public class TestCase1Implementation extends OrangehrmBaseClass {
+
+    @Test
+    public void testCase1Test() throws InterruptedException {
+        homePage.clickBuzz();
+        Thread.sleep(1000);
+        buzzPage.getTf(info);
+        Thread.sleep(1000);
+        buzzPage.getPostButton();
+        Thread.sleep(1000);
+        buzzPage.verify(info);
+        Thread.sleep(2000);
+    }
+}
