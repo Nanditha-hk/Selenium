@@ -1,3 +1,8 @@
+// Navigate to demoAppsQspiders toggle page
+// Click on disbaled toggle buttons
+// Click on Place order button.
+// Verify that order is placed.
+
 package FinalAssessment;
 
 import java.time.Duration;
